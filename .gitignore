@@ -1,0 +1,11 @@
+target/
+run-reports/
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+*.zip
+*.key
+*.log

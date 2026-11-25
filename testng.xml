@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="IAP Week 1 - Selenium Foundations" verbose="1">
+    <test name="SauceDemo Regression">
+        <classes>
+            <class name="com.iap.tests.LoginTests"/>
+            <class name="com.iap.tests.InventoryTests"/>
+            <class name="com.iap.tests.CheckoutTests"/>
+            <class name="com.iap.tests.EndToEndPurchaseTest"/>
+        </classes>
+    </test>
+</suite>
