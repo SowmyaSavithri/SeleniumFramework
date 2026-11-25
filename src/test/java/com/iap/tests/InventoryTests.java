@@ -14,39 +14,60 @@ public class InventoryTests extends BaseTest {
     @Test(description = "TC08 [Positive] Adding one product updates the cart badge to 1")
     public void addSingleProductUpdatesBadge() {
         InventoryPage inventory = loginAsStandardUser();
-        inventory.addProduct("Sauce Labs Backpack");
+        step("Log in as the valid user; the Products page is displayed");
 
-        Assert.assertTrue(inventory.waitForCartCount(1), "Cart badge should show 1");
+        inventory.addProduct("Sauce Labs Backpack");
+        boolean badgeShowsOne = inventory.waitForCartCount(1);
+        step("Add \"Sauce Labs Backpack\" to the cart; the cart badge shows 1");
+
+        Assert.assertTrue(badgeShowsOne, "Cart badge should show 1");
     }
 
     @Test(description = "TC09 [Boundary] Adding all 6 products shows 6, removing them clears the badge")
     public void addAllProductsThenRemoveAll() {
         InventoryPage inventory = loginAsStandardUser();
+        step("Log in as the valid user; the Products page is displayed");
 
         inventory.addFirstProducts(TOTAL_PRODUCTS);
-        Assert.assertTrue(inventory.waitForCartCount(TOTAL_PRODUCTS), "Cart badge should show 6");
+        boolean badgeShowsAll = inventory.waitForCartCount(TOTAL_PRODUCTS);
+        step("Add all " + TOTAL_PRODUCTS + " products to the cart; the cart badge shows " + TOTAL_PRODUCTS);
+        Assert.assertTrue(badgeShowsAll, "Cart badge should show 6");
 
         inventory.removeAllProducts();
-        Assert.assertTrue(inventory.waitForCartCount(0), "Cart badge should disappear when the cart is empty");
+        boolean badgeGone = inventory.waitForCartCount(0);
+        step("Remove all products; the cart badge disappears");
+        Assert.assertTrue(badgeGone, "Cart badge should disappear when the cart is empty");
     }
 
     @Test(description = "TC10 [Positive] Sorting by price (low to high) orders the products correctly")
     public void sortByPriceLowToHigh() {
         InventoryPage inventory = loginAsStandardUser();
-        inventory.sortBy("Price (low to high)");
+        step("Log in as the valid user; the Products page is displayed");
 
-        Assert.assertTrue(inventory.arePricesSortedLowToHigh(),
-                "Prices should be in ascending order: " + inventory.getPrices());
+        inventory.sortBy("Price (low to high)");
+        boolean sorted = inventory.arePricesSortedLowToHigh();
+        step("Sort the products by \"Price (low to high)\"; prices shown: " + inventory.getPrices());
+
+        Assert.assertTrue(sorted, "Prices should be in ascending order: " + inventory.getPrices());
     }
 
     @Test(description = "TC11 [Positive] Removing an item on the cart page empties the cart")
     public void removeItemFromCart() {
         InventoryPage inventory = loginAsStandardUser();
-        inventory.addProduct("Sauce Labs Bike Light");
-        CartPage cart = inventory.openCart();
+        step("Log in as the valid user; the Products page is displayed");
 
-        Assert.assertEquals(cart.getItemCount(), 1, "Cart should hold one item before removal");
+        inventory.addProduct("Sauce Labs Bike Light");
+        inventory.waitForCartCount(1);
+        step("Add \"Sauce Labs Bike Light\" to the cart; the cart badge shows 1");
+
+        CartPage cart = inventory.openCart();
+        int before = cart.getItemCount();
+        step("Open the cart; it holds " + before + " item");
+        Assert.assertEquals(before, 1, "Cart should hold one item before removal");
+
         cart.removeFirstItem();
-        Assert.assertEquals(cart.getItemCount(), 0, "Cart should be empty after removal");
+        int after = cart.getItemCount();
+        step("Remove the item on the cart page; the cart now holds " + after + " items");
+        Assert.assertEquals(after, 0, "Cart should be empty after removal");
     }
 }

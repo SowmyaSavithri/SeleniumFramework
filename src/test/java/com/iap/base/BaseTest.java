@@ -5,6 +5,7 @@ import com.iap.pages.LoginPage;
 import com.iap.utils.ConfigReader;
 import com.iap.utils.DriverFactory;
 import com.iap.utils.HtmlReportListener;
+import com.iap.utils.ReportStep;
 import com.iap.utils.ScreenshotUtil;
 import com.iap.utils.TestCaseFilter;
 import org.openqa.selenium.WebDriver;
@@ -16,7 +17,9 @@ import org.testng.annotations.Listeners;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * Starts a fresh browser for every test (isolated tests) and always closes it, even on failure.
@@ -28,7 +31,28 @@ public abstract class BaseTest {
     /** Name of the ITestResult attribute that holds the screenshot path (read by the HTML report). */
     public static final String SCREENSHOT_ATTRIBUTE = "screenshotPath";
 
+    /** Name of the ITestResult attribute that holds the list of recorded steps (read by the HTML report). */
+    public static final String STEPS_ATTRIBUTE = "reportSteps";
+
     protected WebDriver driver;
+
+    /**
+     * Records a step for the report: a plain-English description plus a screenshot taken right now.
+     * Call it AFTER the action (and after any wait/check that confirms it), so the screenshot shows the result.
+     */
+    @SuppressWarnings("unchecked")
+    protected void step(String description) {
+        ITestResult result = Reporter.getCurrentTestResult();
+        if (result == null) {
+            return;
+        }
+        List<ReportStep> steps = (List<ReportStep>) result.getAttribute(STEPS_ATTRIBUTE);
+        if (steps == null) {
+            steps = new ArrayList<>();
+            result.setAttribute(STEPS_ATTRIBUTE, steps);
+        }
+        steps.add(new ReportStep(description, ScreenshotUtil.thumbnailBase64(driver)));
+    }
 
     @BeforeMethod(alwaysRun = true)
     public void setUp() {

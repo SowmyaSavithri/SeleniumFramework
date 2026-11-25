@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 
 public class CheckoutInfoPage extends BasePage {
 
+    private static final By TITLE = By.cssSelector("[data-test='title']");
     private static final By FIRST_NAME = By.cssSelector("[data-test='firstName']");
     private static final By LAST_NAME = By.cssSelector("[data-test='lastName']");
     private static final By POSTAL_CODE = By.cssSelector("[data-test='postalCode']");
@@ -13,6 +14,10 @@ public class CheckoutInfoPage extends BasePage {
 
     public CheckoutInfoPage(WebDriver driver) {
         super(driver);
+    }
+
+    public boolean isLoaded() {
+        return textBecomes(TITLE, "Checkout: Your Information");
     }
 
     public CheckoutInfoPage enterDetails(String firstName, String lastName, String postalCode) {

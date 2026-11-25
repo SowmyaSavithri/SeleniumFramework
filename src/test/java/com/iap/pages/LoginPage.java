@@ -15,26 +15,10 @@ public class LoginPage extends BasePage {
 
     public LoginPage(WebDriver driver) {
         super(driver);
-//        System.out.println( "login");
     }
 
     public LoginPage open() {
-        System.out.println( "Debug");
         driver.get(ConfigReader.get("base.url"));
-
-
-//        try{
-//
-//            driver.get("https://www.saucedemo.com/");
-//            String title = driver.getTitle();
-//            System.out.println( title);
-//
-//        }
-//        catch(Exception e){
-//            System.out.println("exception: "+e );
-//        }
-
-
         waitVisible(LOGIN_BUTTON);
         return this;
     }
